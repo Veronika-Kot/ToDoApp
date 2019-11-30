@@ -145,7 +145,6 @@ class ToDoViewController: UITableViewController {
         cell.toDoIem = theItem
         cell.toDoItemName.text = theItem.name
         cell.toDoDate.text = theItem.date
-        cell.statusSwitch.setOn(theItem.done, animated: false)
         
         return cell
     }
@@ -178,6 +177,19 @@ class ToDoViewController: UITableViewController {
         }
         
         tableView.reloadData()
+    }
+    
+    override func tableView(_ tableView: UITableView,
+                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
+    {
+        
+        let doneAction = UIContextualAction(style: .normal, title:  "Mark DONE", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            print("CloseAction ...")
+            success(true)
+        })
+        doneAction.backgroundColor = .blue
+        return UISwipeActionsConfiguration(actions: [doneAction])
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
