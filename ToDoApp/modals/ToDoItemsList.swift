@@ -50,5 +50,14 @@ class ToDoItemList {
             itemList.remove(at: index)
         }
     }
+    
+    func getItem(_ index: Int, _ done: Bool) -> ToDoItem
+    {
+        if done {
+           return doneItemList[index]
+        } else {
+           return itemList[index]
+        }
+    }
 }
 

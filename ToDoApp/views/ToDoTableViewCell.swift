@@ -26,6 +26,18 @@ class ToDoTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    func greyOut(){
+        toDoItemName.textColor = .gray
+        toDoDate.textColor = .lightGray
+    }
+    
+    func colorOut(){
+        toDoItemName.textColor =  UIColor(red: 38/255, green: 38/255, blue: 38/255, alpha: 1)
+        toDoDate.textColor = UIColor(red: 76/255, green: 175/255, blue: 80/255, alpha: 1)
+    }
+    
+    
+    
 //    @objc func switchChanged(mySwitch: UISwitch) {
 //        let alert = UIAlertController(title: "Are you sure?", message: "Do you want't to complete the task?", preferredStyle: .alert)
 //        

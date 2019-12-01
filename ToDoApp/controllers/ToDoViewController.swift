@@ -136,8 +136,10 @@ class ToDoViewController: UITableViewController {
         switch (indexPath.section) {
         case 0:
             theItem = toDoItems.itemList[indexPath.row]
+            cell.colorOut()
         case 1:
             theItem = toDoItems.doneItemList[indexPath.row]
+            cell.greyOut()
         default:
             theItem = ToDoItem()
         }
@@ -153,41 +155,72 @@ class ToDoViewController: UITableViewController {
         return true
     }
     
+    //right side action delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-            var taskID = ""
-            //toDoItems.itemList[indexPath.row].id
             
-            switch (indexPath.section) {
-            case 0:
-                taskID = toDoItems.itemList[indexPath.row].id
-            case 1:
-                taskID = toDoItems.doneItemList[indexPath.row].id
-            default:
-                taskID = ""
-            }
+            let alert = UIAlertController(title: "Are you sure?", message: "Do you want't to delete this task?", preferredStyle: .alert)
             
-            self.ref.child("users").child(self.userID!).child("tasks").child(taskID)
-                .removeValue { error, _ in
-                    if (error != nil) { print(error?.localizedDescription) }
-            }
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+                        
+                        var taskID = ""
+                        switch (indexPath.section) {
+                        case 0:
+                            taskID = self.toDoItems.itemList[indexPath.row].id
+                        case 1:
+                            taskID = self.toDoItems.doneItemList[indexPath.row].id
+                        default:
+                            taskID = ""
+                        }
+                        self.ref.child("users").child(self.userID!).child("tasks").child(taskID)
+                            .removeValue { error, _ in
+                                if (error != nil) { print(error?.localizedDescription) }
+                        }
+                        
+                        //remove from local array
+                        self.toDoItems.removeItem(indexPath.row, Bool(indexPath.section as NSNumber))
+                        
+                        tableView.reloadData()
+                    }))
             
-            //remove from local array
-            toDoItems.removeItem(indexPath.row, Bool(indexPath.section as NSNumber))
+                    alert.addAction(UIAlertAction(title: "No", style: .cancel))
+    
+            
+            self.present(alert, animated: true)
+            
         }
-        
-        tableView.reloadData()
     }
     
+    //left side action done/undone
     override func tableView(_ tableView: UITableView,
-                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
+                            leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
     {
-        
-        let doneAction = UIContextualAction(style: .normal, title:  "Mark DONE", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            print("CloseAction ...")
+        let  doneAction = UIContextualAction(style: .normal, title:  "DONE", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            
+            var toDoIem = self.toDoItems.getItem(indexPath.row, Bool(indexPath.section as NSNumber))
+            
+            //Update task in DB
+            let task =  self.ref.child("users").child(self.userID).child("tasks").child(toDoIem.id)
+            task.setValue(["name": toDoIem.name, "details": toDoIem.details, "due": toDoIem.date, "status": !toDoIem.done])
+            
+            //Move from one section to another
+            self.toDoItems.removeItem(indexPath.row, toDoIem.done)
+            self.toDoItems.addItem(toDoIem, !toDoIem.done)
+            
+            toDoIem.done = !toDoIem.done
+            tableView.reloadData()
+            
             success(true)
         })
-        doneAction.backgroundColor = .blue
+        
+        if(indexPath.section == 0) {
+            doneAction.backgroundColor = UIColor(red: 76/255, green: 175/255, blue: 80/255, alpha: 1)
+            doneAction.title = "DONE"
+        } else {
+            doneAction.backgroundColor =  UIColor(red: 230/255, green: 74/255, blue: 25/255, alpha: 1)
+            doneAction.title = "UN-DONE"
+        }
+        
         return UISwipeActionsConfiguration(actions: [doneAction])
         
     }
