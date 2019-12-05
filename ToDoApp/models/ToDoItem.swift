@@ -1,22 +1,23 @@
 //
-//  ToDoItem.swift
+//  ToDoItem.swift -- Model for ToDoItem
 //  ToDoApp
 //
-//  Created by Veronika Kotckovich on 11/2/19.
+//  Created by Veronika Kotckovich on 10/30/19.
+//  Student ID: 301067511
 //  Copyright © 2019 Centennial College. All rights reserved.
-//
 
 import Foundation
 
 class ToDoItem {
     
+    //local variables
     var name: String = ""
-    
     var details: String = ""
     var done: Bool = false
     var date: String
     var id: String
     
+    // Default init
     init() {
         self.name = "To Do Item"
         self.details = "Details"
@@ -38,6 +39,4 @@ class ToDoItem {
         self.done = status
         self.id = id
     }
-    
-    
 }

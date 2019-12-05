@@ -171,8 +171,6 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
 // EXTENSIONS
 //
 
-// Extension
-
 // Extennion for setting colored border for buttons
 extension UIButton {
     func setBorder(_ color: UIColor){

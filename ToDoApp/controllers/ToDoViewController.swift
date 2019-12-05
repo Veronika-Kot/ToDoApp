@@ -39,9 +39,10 @@ class ToDoViewController: UITableViewController {
             // Get user value
             var value = snapshot.value as? NSDictionary
             
-            //If there is a value, get an array of taks
+            // If there is a value, get an array of taks
             if value != nil {
                 if let snapDict = snapshot.value as? [String:AnyObject] {
+                    // Loop throight tasks
                     for child in snapDict{
                         let shotKey = snapshot.children.nextObject() as! DataSnapshot
                         if let task = child.value as? [String:AnyObject]{
@@ -56,18 +57,20 @@ class ToDoViewController: UITableViewController {
                 }
             //if value is nill, cretae a user with one default task
             } else {
-                
+                // Getting today day
                 let dueDate = self.dateFormatter.string(from: Date())
-                
+               
+                // Creating toDo item model and store it locally
                 let anItem = ToDoItem("Your First Task", "Task Details", dueDate)
                 self.toDoItems.addItem(anItem, false)
                 
+                // Push new task to DB
                 let dbTask = self.ref.child("users").child(self.userID!).child("tasks").childByAutoId()
                 dbTask.setValue(["name": anItem.name, "details": anItem.details, "status": false, "due": anItem.date])
                 
             }
             
-            //Reloading table data here, since that func is ASYNC
+            // Reloading table data here, since that func is ASYNC
             self.tableView.reloadData()
         }) { (error) in
             print(error.localizedDescription)
@@ -93,7 +96,6 @@ class ToDoViewController: UITableViewController {
     
     //Adding new toDo task
     @IBAction func addToDo(_ sender: Any) {
-        
         //Creating an instance of ToDoItem with default values
         let dueDate = self.dateFormatter.string(from: Date())
         let anItem = ToDoItem("New Task", "Task Details", dueDate)
@@ -151,10 +153,10 @@ class ToDoViewController: UITableViewController {
         var theItem: ToDoItem!
         
         switch (indexPath.section) {
-        case 0:
+        case 0: //Not done tasks
             theItem = toDoItems.itemList[indexPath.row]
             cell.colorOut()
-        case 1:
+        case 1:  //Done tasks
             theItem = toDoItems.doneItemList[indexPath.row]
             cell.greyOut()
         default:
@@ -184,7 +186,7 @@ class ToDoViewController: UITableViewController {
                     alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
                         var taskID = ""
                         
-                        //Getting the task ID
+                        //Getting the task auto_id
                         switch (indexPath.section) {
                         case 0:
                             taskID = self.toDoItems.itemList[indexPath.row].id
