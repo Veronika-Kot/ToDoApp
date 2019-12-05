@@ -1,8 +1,9 @@
 //
-//  DetailsViewController.swift
+//  DetailsViewController.swift -- used for updating the toDo item details
 //  ToDoApp
 //
-//  Created by Veronika Kotckovich on 11/2/19.
+//  Created by Veronika Kotckovich on 10/30/19.
+//  Student ID: 301067511
 //  Copyright © 2019 Centennial College. All rights reserved.
 //
 
@@ -38,6 +39,7 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
         // Getting DB reference
         ref = Database.database().reference()
         
+        // Setting values for UI elements
         nameTextField.text = toDoIem.name
         detailsTextView.text = toDoIem.details
         
@@ -46,12 +48,12 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
         
         statusSwitch.setOn(toDoIem.done, animated: false)
         
+        // Creating UIColors based on styleguide
         let lightPink = UIColor(red: 1, green: 201/255, blue: 188/255, alpha: 1)
-        
         let darkPink = UIColor(red: 230/255, green: 74/255, blue: 25/255, alpha: 1)
-        
         let green = UIColor(red: 76/255, green: 175/255, blue: 80/255, alpha: 1)
         
+        // Creating borders for input fields and buttons
         detailsTextView.layer.borderWidth = 1
         detailsTextView.layer.borderColor = lightPink.cgColor
         detailsTextView.layer.cornerRadius = 5
@@ -69,22 +71,24 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
         cancelButton.setBorder(green)
         deleteButton.setBorder(darkPink)
         
-        //switch target
+        // Add a target actions to a switch
         statusSwitch.addTarget(self, action: #selector(switchChanged), for: UIControl.Event.valueChanged)
         
         //textField delegets 
         nameTextField.delegate = self
         
+        //Add a toolbar to DatePicker view with a target action
         let toolBar = UIToolbar().ToolbarPicker(selectDone: #selector(self.dismissKeyboard), selectToday: #selector(findToday))
         dateField.inputAccessoryView = toolBar
         
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         
+        //Adding tap gesture for closing keyboards
         view.addGestureRecognizer(tap)
-        
     }
     
+    //Saving action
     @IBAction func onSave(_ sender: UIButton) {
         toDoIem.name = nameTextField.text ?? ""
         toDoIem.details = detailsTextView.text ?? ""
@@ -101,29 +105,33 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
             ToDoItemList.getInstance().addItem(toDoIem, statusSwitch.isOn)
         }
         
-        
+        // Return back to list controller
         self.navigationController?.popToRootViewController(animated: true)
     }
     
+    //Cancel action - just return back
     @IBAction func onCancel(_ sender: UIButton) {
         self.navigationController?.popToRootViewController(animated: true)
     }
     
+    //Delete action
     @IBAction func onDelete(_ sender: UIButton) {
         let taskID = toDoIem.id
+        
+        // Remove item from the DB
         self.ref.child("users").child(self.userID!).child("tasks").child(taskID)
             .removeValue { error, _ in
                 if (error != nil) { print(error?.localizedDescription) }
         }
         
-        //remove from local array
+        // Remove from local array
         ToDoItemList.getInstance().removeItem(indexPath, toDoIem.done)
         
-        //Go back to previous viewController
+        // Go back to previous viewController
         self.navigationController?.popToRootViewController(animated: true)
     }
     
-    
+    // TextField Delegate method to open Date picker view, when date-input is selected
     @IBAction func onDateBeginEditing(_ sender: UITextField) {
         datePickerView = UIDatePicker()
         datePickerView!.datePickerMode = .date
@@ -132,26 +140,29 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
         datePickerView!.addTarget(self, action: #selector(datePickerChanged(picker:)), for: .valueChanged)
     }
     
-    //TextField function fired when return key is pressed on keyboard
+    // TextField Delegate function fired when return key is pressed on keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return false
     }
     
+    // Target action - Set value to date-input, when date is selected
     @objc func datePickerChanged(picker: UIDatePicker){
         dateField.text = dateFormatter.string(from: picker.date)
     }
     
-    
+    // Target action - Action for Date Picker toolbar -- find today
     @objc func findToday() {
         datePickerView!.date = Date()
         dateField.text = dateFormatter.string(from:  Date())
     }
     
+    // Target action - close keyboard when tapped somewhere-else on the screen
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
     
+    // Target action - on swtich change, setting status on opposite
     @objc func switchChanged(mySwitch: UISwitch) {
         changedStatus = !changedStatus
     }
@@ -159,6 +170,10 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
 //
 // EXTENSIONS
 //
+
+// Extension
+
+// Extennion for setting colored border for buttons
 extension UIButton {
     func setBorder(_ color: UIColor){
         self.layer.borderWidth = 1
@@ -167,6 +182,7 @@ extension UIButton {
     }
 }
 
+// Extennion for adding toolbar with Done and Today buttons
 extension UIToolbar {
     func ToolbarPicker(selectDone: Selector, selectToday: Selector) -> UIToolbar{
         let toolBar = UIToolbar()
@@ -183,6 +199,7 @@ extension UIToolbar {
     }
 }
 
+// Extennion for padding to text field
 extension UITextField {
     enum PaddingSide {
         case left(CGFloat)
@@ -191,7 +208,6 @@ extension UITextField {
     }
     
     func addPadding(_ padding: PaddingSide) {
-        //        self.leftViewMode = .always
         self.layer.masksToBounds = true
         
         switch padding {

@@ -82,7 +82,7 @@
 			children = (
 				7B083650238F4A030002AFB7 /* GoogleService-Info.plist */,
 				7B3C7C70236E206E000405AB /* controllers */,
-				7B3C7C6B236E13E2000405AB /* modals */,
+				7B3C7C6B236E13E2000405AB /* models */,
 				7B3C7C68236CF02B000405AB /* views */,
 				7B1B328C236A673F008B3238 /* AppDelegate.swift */,
 				7B1B3290236A673F008B3238 /* Main.storyboard */,
@@ -101,13 +101,13 @@
 			path = views;
 			sourceTree = "<group>";
 		};
-		7B3C7C6B236E13E2000405AB /* modals */ = {
+		7B3C7C6B236E13E2000405AB /* models */ = {
 			isa = PBXGroup;
 			children = (
 				7B3C7C6C236E1436000405AB /* ToDoItem.swift */,
 				7B083652238F4C9B0002AFB7 /* ToDoItemsList.swift */,
 			);
-			path = modals;
+			path = models;
 			sourceTree = "<group>";
 		};
 		7B3C7C70236E206E000405AB /* controllers */ = {
