@@ -29,11 +29,11 @@ jobs:
           } >> $GITHUB_STEP_SUMMARY
 
           AAA='{"listSkippedSessions": ["One", "Two", "Three"]}'
-          SKIPPED=$( jq -r '.listSkippedSessions' <<< $AAA )
-              jq -c '.[]' <<< "$SKIPPED" | while read i; do
-                echo "| $i |"
-                SKIPPED+="$(echo ${i})"
-              done
+          SKIPPED_JSON=$( jq -r '.listSkippedSessions' <<< $AAA )
+          jq -c '.[]' <<< "$SKIPPED_JSON" | while read i; do
+            echo "| $i |"
+            SKIPPED+="$(echo ${i})"
+          done
           {
             echo "FAILED=${FAILED}"
             echo "SKIPPED=${SKIPPED}"
