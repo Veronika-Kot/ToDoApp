@@ -29,7 +29,7 @@ jobs:
             SKIPPED_JSON=$( jq -r '.listSkippedSessions' <<< $AAA )
             jq -c '.[]' <<< "$SKIPPED_JSON" | while read i; do
               echo "| $i |"
-              SKIPPED+=$(echo jq -r $i)
+              SKIPPED+=${i}
             done
             
             echo "$FAILED and $SKIPPED"
