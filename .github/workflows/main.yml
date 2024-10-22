@@ -31,7 +31,7 @@ jobs:
               echo "| $i |"
             done
 
-            SKIPPED=$(jq -r '.listSkippedSessions | to_entries | .[] <<< $AAA)
+            SKIPPED=$(jq -r '.listSkippedSessions' | to_entries | .[] <<< $AAA)
             
             echo "$FAILED and $SKIPPED"
          
