@@ -19,20 +19,24 @@ jobs:
             FAILED=""
             SKIPPED=""
 
-            max=10
-            for (( i=1; i <= $max; ++i ))
-            do
-                FAILED+=" ${i}"
-            done
-
             AAA='{"listSkippedSessions": ["One", "Two", "Three"]}'
             SKIPPED_JSON=$( jq -r '.listSkippedSessions' <<< $AAA )
             jq -c '.[]' <<< "$SKIPPED_JSON" | while read i; do
               echo "| $i |"
             done
-            
-            SKIPPED=$(echo $(jq -r '.listSkippedSessions' <<< $AAA ))
-            echo "$FAILED and $SKIPPED"
+          BBB='{"listFailedStepsPerLog": [
+          {
+            "sessionId": "gHN7sl578kGltZQF0bYvLQ",
+            "failedSteps": 1
+          },
+          {
+            "sessionId": "Hnghe9eeeEyI6QQoE682Kg",
+            "failedSteps": 4
+          }]
+          }'
+          SKIPPED="[ $(echo $(jq -r '.listSkippedSessions | to_entries | .[] | .value ' <<< $AAA )) ]"
+          FAILED="[ $(echo $(jq -r '.listFailedStepsPerLog | to_entries | .[] | .value | .sessionId + " = "+(.failedSteps | @sh)' <<< $BBB )) ]"
+          echo "$FAILED and $SKIPPED"
          
           } >> $GITHUB_STEP_SUMMARY
           {
