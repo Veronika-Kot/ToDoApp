@@ -31,7 +31,7 @@ jobs:
               echo "| $i |"
             done
             
-            SKIPPED=$(echo jq -r '.listSkippedSessions' <<< $AAA )
+            SKIPPED=$(echo $(jq -r '.listSkippedSessions' <<< $AAA ))
             echo "$FAILED and $SKIPPED"
          
           } >> $GITHUB_STEP_SUMMARY
