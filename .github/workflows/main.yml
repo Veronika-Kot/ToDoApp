@@ -1,0 +1,48 @@
+run-name: push ( ${{ github.actor }} )
+name: Headless
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  my-test:
+    continue-on-error: true
+    runs-on:
+      - self-hosted
+    outputs:
+      failed: ${{steps.one.outputs.FAILED}}
+      skipped: ${{steps.one.outputs.SKIPPED}}
+    steps:
+      - name: one
+        id: one
+        run: |
+          {
+            FAILED=""
+            SKIPPED=""
+
+            max=10
+            for (( i=1; i <= $max; ++i ))
+            do
+                FAILED+=" ${i}"
+            done
+            SKIPPED="12"
+            echo "$FAILED and $SKIPPED"
+          } >> $GITHUB_STEP_SUMMARY
+          {
+            echo "FAILED=${FAILED}"
+            echo "SKIPPED=${SKIPPED}"
+          } >> $GITHUB_OUTPUT
+  my-print:
+    continue-on-error: true
+    needs: my-test
+    runs-on:
+      - self-hosted
+    outputs:
+      failed: ${{steps.one.outputs.FAILED}}
+      skipped: ${{steps.one.outputs.SKIPPED}}
+    steps:
+      - name: one
+        run: |  
+          echo "${{ needs.my-test.outputs.failed }}"
+          echo "${{ needs.my-test.outputs.skipped }}"
+          
