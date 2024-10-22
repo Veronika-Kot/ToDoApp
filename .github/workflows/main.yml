@@ -32,7 +32,7 @@ jobs:
           SKIPPED=$( jq -r '.listSkippedSessions' <<< $AAA )
               jq -c '.[]' <<< "$SKIPPED" | while read i; do
                 echo "| $i |"
-                SKIPPED+=" ${i}"
+                SKIPPED+="$(echo ${i})"
               done
           {
             echo "FAILED=${FAILED}"
