@@ -7,8 +7,7 @@ on:
 jobs:
   my-test:
     continue-on-error: true
-    runs-on:
-      - self-hosted
+    runs-on: ubuntu-latest
     outputs:
       failed: ${{steps.one.outputs.FAILED}}
       skipped: ${{steps.one.outputs.SKIPPED}}
@@ -35,8 +34,7 @@ jobs:
   my-print:
     continue-on-error: true
     needs: my-test
-    runs-on:
-      - self-hosted
+    runs-on: ubuntu-latest
     outputs:
       failed: ${{steps.one.outputs.FAILED}}
       skipped: ${{steps.one.outputs.SKIPPED}}
