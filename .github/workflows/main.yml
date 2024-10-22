@@ -24,14 +24,16 @@ jobs:
             do
                 FAILED+=" ${i}"
             done
-            echo "$FAILED and $SKIPPED"
-         
+
             AAA='{"listSkippedSessions": ["One", "Two", "Three"]}'
             SKIPPED_JSON=$( jq -r '.listSkippedSessions' <<< $AAA )
             jq -c '.[]' <<< "$SKIPPED_JSON" | while read i; do
               echo "| $i |"
-              SKIPPED+=$(echo jq -r <<< $i)
+              SKIPPED+=$(echo jq -r $i)
             done
+            
+            echo "$FAILED and $SKIPPED"
+         
           } >> $GITHUB_STEP_SUMMARY
           {
             echo "FAILED=${FAILED}"
