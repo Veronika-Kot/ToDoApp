@@ -31,14 +31,14 @@ jobs:
               echo "| $i |"
             done
 
-            SKIPPED=$(jq -r '.listSkippedSessions' | to_entries | .[] <<< $AAA)
+            SKIPPED="$(jq -r '.listSkippedSessions' $AAA)"
             
             echo "$FAILED and $SKIPPED"
          
           } >> $GITHUB_STEP_SUMMARY
           {
             echo "FAILED=${FAILED}"
-            echo "SKIPPED=${SKIPPED}"
+            echo "SKIPPED=${SKIPPED_JSON}"
           } >> $GITHUB_OUTPUT
   my-print:
     continue-on-error: true
