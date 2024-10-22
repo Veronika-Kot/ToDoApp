@@ -30,10 +30,8 @@ jobs:
             jq -c '.[]' <<< "$SKIPPED_JSON" | while read i; do
               echo "| $i |"
             done
-
-            SKIPPED="$(jq -r '.listSkippedSessions' $AAA)"
             
-            echo "$FAILED and $SKIPPED"
+            echo "$FAILED and $SKIPPED_JSON"
          
           } >> $GITHUB_STEP_SUMMARY
           {
